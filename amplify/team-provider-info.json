@@ -1,4 +1,22 @@
 {
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-amplifyc278e9174cfa4-staging-170349-authRole",
+      "UnauthRoleArn": "arn:aws:iam::705476165204:role/amplify-amplifyc278e9174cfa4-staging-170349-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::705476165204:role/amplify-amplifyc278e9174cfa4-staging-170349-authRole",
+      "Region": "us-west-1",
+      "DeploymentBucketName": "amplify-amplifyc278e9174cfa4-staging-170349-deployment",
+      "UnauthRoleName": "amplify-amplifyc278e9174cfa4-staging-170349-unauthRole",
+      "StackName": "amplify-amplifyc278e9174cfa4-staging-170349",
+      "StackId": "arn:aws:cloudformation:us-west-1:705476165204:stack/amplify-amplifyc278e9174cfa4-staging-170349/ee396530-0396-11ed-b5e3-02601ee85cab",
+      "AmplifyAppId": "dqnm5iwupsmtk"
+    },
+    "categories": {
+      "auth": {
+        "capstonerepo90113ac1": {}
+      }
+    }
+  },
   "dev": {
     "awscloudformation": {
       "AuthRoleName": "amplify-capstonerepo-dev-103118-authRole",
@@ -10,6 +28,11 @@
       "StackName": "amplify-capstonerepo-dev-103118",
       "StackId": "arn:aws:cloudformation:us-west-1:705476165204:stack/amplify-capstonerepo-dev-103118/c7d7d0d0-039a-11ed-8c9f-06a6668caf53",
       "AmplifyAppId": "dqnm5iwupsmtk"
+    },
+    "categories": {
+      "auth": {
+        "capstonerepoecf11210": {}
+      }
     }
   }
 }
