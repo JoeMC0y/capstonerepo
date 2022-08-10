@@ -1,4 +1,4 @@
-//const {MongoClient, ObjectId} = require('mongodb')
+const {MongoClient, ObjectId} = require('mongodb')
 
 const dbName = 'Users';
 const collectionName = 'People';
@@ -33,7 +33,7 @@ exports.userStuff = {
 
     },
 
-    createUser: async function(name, age, UserName, Password){
+    createUser: async function(name, age, UserName, Email){
         const client = await MongoClient.connect(uri);
 
         try{
@@ -44,7 +44,7 @@ exports.userStuff = {
                 name: name,
                 age: age,
                 Username: UserName,
-                Password: Password
+                Email: Email
             }
 
             var results = await collection.insertOne(newUser);
@@ -78,7 +78,7 @@ exports.userStuff = {
         }
     },
 
-    updateUser: async function(id, name, age, UserName, password){
+    updateUser: async function(id, name, age, UserName, password, email){
         const client = await MongoClient.connect(uri);
 
         try{
@@ -91,7 +91,8 @@ exports.userStuff = {
                     name: name,
                     age: age,
                     Username: UserName,
-                    Password: password
+                    Password: password,
+                    Email: email
                 }
             }
 

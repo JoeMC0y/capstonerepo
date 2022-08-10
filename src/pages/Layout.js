@@ -7,14 +7,33 @@ import {
     View,
     Card,
   } from "@aws-amplify/ui-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-const Layout = ({signOut}) => {
-  return (
 
+const Layout = ({signOut, aws, users}) => {
+  useEffect(() => {
+      checkUser()
+    }, []);
+
+    const [user, setUser] = useState([]);
+
+    const checkUser = () =>{
+      var Email = aws.attributes
+
+      users.forEach(user => {
+        if(Email.email != user.email){
+          
+        }else{
+          console.log(user)
+          setUser(user)
+        }
+      });
+    }
+
+  return (
     <>
         <Navbar bg="light" expand="lg" variant="light">
             <Container>
@@ -33,7 +52,7 @@ const Layout = ({signOut}) => {
               <Navbar.Collapse className="justify-content-end">
                   <Nav>
                     <Nav.Link href="/useracc">
-                      Username
+                      {user.name}
                     </Nav.Link>
                   </Nav>
                   <Button className="sigout" onClick={signOut}>Sign Out</Button>

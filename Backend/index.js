@@ -1,4 +1,4 @@
-//const mong = require("./usermongo")
+const mong = require("./usermongo")
 const houseMaker = require("./HouseMaker")
 const cors = require('cors');
 
@@ -12,6 +12,29 @@ app.use(express.static("images"))
 app.get("/", async (req, res) => {
     console.log("imma die")
 })
+
+app.get("/getAll", async (req, res)=>{
+
+    const users = await mong.userStuff.getAll()
+    
+    console.log(users)
+
+    res.json(users)
+    
+})
+
+app.get("/makeUser/:name&:age&:username&:email", async (req, res)=>{
+    console.log(req.params.name)
+    console.log(req.params.age)
+    console.log(req.params.username)
+    console.log(req.params.email)
+
+    
+    mong.userStuff.createUser(req.params.name, req.params.age, req.params.username, req.params.email)
+    console.log("did it?") 
+
+
+});
 
 app.get("/getRand/:count", (req, res) => {
 
