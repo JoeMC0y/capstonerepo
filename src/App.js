@@ -33,7 +33,7 @@ function App({ signOut }) {
   const [users, setUsers] = useState([]);
   const [aws, setAws] = useState([]);
   const [worked, setWorked] = useState({
-    signedIn: true,
+    signedIn: false,
     user: []
   });
 
@@ -54,15 +54,11 @@ function App({ signOut }) {
   const checkUser = () =>{
 
     var Email = aws.attributes
+    
 
-    users.every(user => {
+    users.forEach(user => {
       if(Email.email === user.Email){
         setWorked({signedIn: true, user: user})
-        return false;
-      }else{
-        console.log(user.Email)
-
-        setWorked({signedIn: false, user: []})
       }
     });
   }
@@ -113,7 +109,7 @@ function App({ signOut }) {
       return (
       <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout signOut={signOut} aws={aws} users={users} />}>
+        <Route path="/" element={<Layout signOut={signOut} aws={aws}/>}>
           <Route index element={<Home />} />
           <Route path="houses" element={<Houses />} />
           <Route path="past" element={<Past />} />
