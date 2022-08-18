@@ -1,26 +1,41 @@
 import react, { useEffect, useState } from 'react';
 import React from 'react';
-const Houses = () => {
+const Houses = ({aws}) => {
     const [houses, setHouses] = useState([])
-
     const [page, setPage] = useState({
         PageType:'HouseList',
         House: []
-      })
+    })
 
     useEffect(() => {
         getData();
     }, []);
 
     const getData = () => {
-        var url = `http://localhost:4200/getRand/10`;
+        var email = aws.attributes
+        var homes = []
+        var url = `http://localhost:4200/homes/${email.email}`;
         fetch(url)
           .then(r => r.json(0))
           .then(data => {
-            setHouses(data.results)
-            console.log(data.results)
+            console.log(data)
+            data.forEach(house =>{
+              if(house.listing === "Open"){
+                homes.push(house)
+              }
+            })
+            console.log(homes)
+            setHouses(homes)
           }).catch(e => console.log(e));
     }
+
+    const wrapperFunc = async () => {
+      setPage({PageType: 'HouseList'})
+      var listing = "Sold"
+      var url = `http://localhost:4200/updateHomelist/${page.House._id}&${listing}`;
+      const reps = await fetch(url).then(r => r.json(0))
+    }
+
 
     if(page.PageType === "HouseList"){
         return(
@@ -29,19 +44,15 @@ const Houses = () => {
                 {
                   houses.map((houses, index) => (
                     <div key={index + 1} className='homeBox' onClick={() => setPage({PageType: 'SingleHouse', House: houses})}>
-                      <div className='imgBox'>
-                        <img src={houses.picture.medium}/>
-                      </div>
                       <br></br>
                       <div className='textBox'>
+
                            <label>Zip: </label>
-                            {houses.location.postcode}
+                            {houses.zipcode}
                             <br></br>
-                            <label>Listing / Pricing:</label>
+                            <label>Pricing:</label>
                             <br></br>
-                            {houses.Listing.listing} 
-                            <br></br>
-                             ${houses.Listing.cost}
+                            ${houses.pricing} 
                       </div>
                     </div>
                   ))
@@ -56,29 +67,24 @@ const Houses = () => {
               <div className='housePage'>
               <p></p>
                 <div className='BigHouseBox'>
-                  <div className='imgBox'>
-                    <img src={page.House.picture.large}/>
-                  </div>
                   <div className='textArea'>
-                        <h3>{page.House.houseType.type} Home</h3>
                         <div>
                             <label>Address: </label>
                             <br></br>
-                            {page.House.location.streetnumber} {page.House.location.street} {page.House.location.city}, {page.House.location.state} {page.House.location.postcode}
+                            {page.House.strAd} {page.House.city}, {page.House.state} {page.House.zipcode}
                             <p></p>
                             <label>Square Footage:</label>
                             <br></br>
-                            {page.House.houseType.sqrft} sqrft.
+                            {page.House.sqrft} sqrft.
                             <p></p>
-                            <label>Listing Type / Pricing: </label>
+                            <label> Pricing: </label>
                             <br></br>
-                            {page.House.Listing.listing}
-                            <br></br>
-                            ${page.House.Listing.cost}
+                            ${page.House.pricing}
                         </div>
                   </div>
-
+                <button className='backBtn' onClick={() => wrapperFunc()}>Sell</button>
                 </div>
+                
               </div>
               </>
           )

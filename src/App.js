@@ -84,6 +84,7 @@ function App({ signOut }) {
 
   const makeData = async (e) =>{
     e.preventDefault();
+    
     const userVal = username.current.value;
     const ageVal = age.current.value;
     const nameVal = name.current.value;
@@ -92,7 +93,7 @@ function App({ signOut }) {
     if(userVal === '' || ageVal === '' || nameVal === ''){
         setWorked({signedIn: false})
     }else{
-      var url = `http://localhost:4200/makeUser/${nameVal}&${userVal}&${ageVal}&${emailVal}`;
+      var url = `http://localhost:4200/makeUser/${nameVal}&${ageVal}&${userVal}&${emailVal}`;
       change()
       const reps = await fetch(url).then(r => r.json(0))
       console.log(reps)
@@ -111,10 +112,10 @@ function App({ signOut }) {
       <Routes>
         <Route path="/" element={<Layout signOut={signOut} aws={aws}/>}>
           <Route index element={<Home />} />
-          <Route path="houses" element={<Houses />} />
-          <Route path="past" element={<Past />} />
-          <Route path="listmaker" element={<List />} />
-          <Route path="useredit" element={<Editor/>}/>
+          <Route path="houses" element={<Houses aws={aws} />} />
+          <Route path="past" element={<Past aws={aws} />} />
+          <Route path="listmaker" element={<List aws={aws} />} />
+          <Route path="useredit" element={<Editor person={worked.user}/>}/>
           <Route path="*" element={<NoPage />} />
           <Route path="useracc" element = {<Acc/>}/>
 

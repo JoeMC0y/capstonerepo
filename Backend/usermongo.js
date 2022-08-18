@@ -78,7 +78,7 @@ exports.userStuff = {
         }
     },
 
-    updateUser: async function(id, name, age, UserName, password, email){
+    updateUser: async function(id, name, age, UserName){
         const client = await MongoClient.connect(uri);
 
         try{
@@ -90,9 +90,7 @@ exports.userStuff = {
                 $set: {
                     name: name,
                     age: age,
-                    Username: UserName,
-                    Password: password,
-                    Email: email
+                    Username: UserName
                 }
             }
 

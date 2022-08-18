@@ -1,7 +1,7 @@
 import react, { useEffect, useRef, useState } from 'react';
 import React from 'react';
 
-function Listing() {
+function Listing({aws}) {
 
     const Address = useRef();
     const city = useRef();
@@ -18,6 +18,8 @@ function Listing() {
 
     const makeData = async (e) => {
         e.preventDefault();
+        const email = aws.attributes
+        const listing = "Open"
         const addVal = Address.current.value;
         const cityVal = city.current.value;
         const stVal = state.current.value;
@@ -28,7 +30,10 @@ function Listing() {
         if(addVal == '' || cityVal == '' ||stVal == '' ||zipVal == '' ||priceVal == '' ||sqrftVal == ''){
             setWorked({working: false, message: "Cant have any empty values", color: "Red"})
         }else{
-            setWorked({working: false, message: "Listing created", color: "Green"})
+            var url = `http://localhost:4200/makeHome/${addVal}&${cityVal}&${stVal}&${zipVal}&${priceVal}&${sqrftVal}&${listing}&${email.email}`
+            const reps = await fetch(url).then(r => r.json(0))
+            setWorked({working: false, message: "Listing created you may view it in listings", color: "Green"})
+            
         }
     }
 
