@@ -76,6 +76,8 @@ app.get("/getRand/:count", (req, res) => {
     
 });
 
+app.get("/makeReq")
+
 function getResults(homes){
     if(homes && homes.length > 0){
         return {

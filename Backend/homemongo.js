@@ -2,8 +2,11 @@ const {MongoClient, ObjectId} = require('mongodb')
 
 const dbName = 'Houses';
 const collectionName = 'homes';
+const collection2Name = 'houseReqs';
+const collection3Name = 'buyers'
 
 const uri = "mongodb+srv://me:C3ll0world@users.33oiczg.mongodb.net/?retryWrites=true&w=majority";
+
 
 
 
@@ -61,6 +64,54 @@ exports.homeStuff = {
         }
     },
 
+    addBuyer : async function(name, phone, email, bidding, houseid){
+        const client = await MongoClient.connect(uri);
+
+        try{
+            const db = client.db(dbName)
+            const collection = db.collection(collection3Name);
+
+            var newbuyer = {
+                name: name,
+                phone: phone,
+                email: email,
+                bidding: bidding,
+                houseid: houseid
+            }
+
+            var results = await collection.insertOne(newbuyer);
+
+        }catch(e){
+            console.log("Database failure")
+            console.log(e)
+        }finally{
+            client.close()
+        }
+    },
+
+    addReqs: async function(text, completed, houseid){
+        const client = await MongoClient.connect(uri);
+
+        try{
+            const db = client.db(dbName)
+            const collection = db.collection(collection2Name);
+
+            var newReq = {
+                text: text,
+                comp: completed,
+                houseid: houseid
+            }
+
+            var results = await collection.insertOne(newReq);
+
+        }catch(e){
+            console.log("Database failure")
+            console.log(e)
+        }finally{
+            client.close()
+        }
+    },
+
     deleteHouse: async function(id){
         const client = await MongoClient.connect(uri);
 
@@ -80,6 +131,13 @@ exports.homeStuff = {
         }finally{
             client.close();
         }
+    },
+
+    deletebuyer: async function(id){
+
+    },
+    deleteReqs: async function(id){
+
     },
 
     updateHome: async function(id, listing){
