@@ -19,6 +19,7 @@ import Editor from "./pages/EditUser";
 import Acc from "./pages/userAcc"
 import "./App.css";
 import { Auth } from 'aws-amplify';
+import Housepg from "./pages/Housepg";
 
 
 
@@ -32,47 +33,49 @@ function App({ signOut }) {
 
   const [users, setUsers] = useState([]);
   const [aws, setAws] = useState([]);
-  const [worked, setWorked] = useState({
-    signedIn: false,
-    user: []
-  });
+  const [worked, setWorked] = useState([]);
 
   useEffect(() => {
     getData()
   }, []);
 
   useEffect(() => {
-    getAws()
-  }, [users]);
+    (async () =>{
+      try{
+        const useinf = await Auth.currentUserInfo();
+        setAws(useinf)
+      } catch (err) { 
+        console.log('error occured')
+      }
+    })();
+
+  }, []);
 
   useEffect(() => {
     checkUser()
-  }, [aws]);
+  }, [aws, users]);
 
   
 
-  const checkUser = () =>{
+  const checkUser = async () =>{
 
     var Email = aws.attributes
     
 
     users.forEach(user => {
       if(Email.email === user.Email){
-        setWorked({signedIn: true, user: user})
+        setWorked(user)
       }
     });
   }
   
 
   const getAws = async () => {
-    const useinf = await Auth.currentUserInfo();
-    console.log(useinf)
-    setAws(useinf)
   }
 
-  const getData = () => {
+  const getData = async () => {
     var url = `http://localhost:4200/getAll`;
-    fetch(url)
+    await fetch(url)
       .then(r => r.json(0))
       .then(data => {
         setUsers(data);
@@ -89,11 +92,12 @@ function App({ signOut }) {
     const ageVal = age.current.value;
     const nameVal = name.current.value;
     const emailVal = aws.attributes.email
+    const acc = true
 
     if(userVal === '' || ageVal === '' || nameVal === ''){
         setWorked({signedIn: false})
     }else{
-      var url = `http://localhost:4200/makeUser/${nameVal}&${ageVal}&${userVal}&${emailVal}`;
+      var url = `http://localhost:4200/makeUser/${nameVal}&${ageVal}&${userVal}&${emailVal}&${acc}`;
       change()
       const reps = await fetch(url).then(r => r.json(0))
       console.log(reps)
@@ -101,16 +105,16 @@ function App({ signOut }) {
   }
 
   const change = () =>{
-    setWorked({signedIn: true})
+    window.location.reload()
   }
 
 
 
-  if (worked.signedIn === true){
+  if (worked.accmade === "true"){
       return (
-      <BrowserRouter>
+    <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout signOut={signOut} aws={aws}/>}>
+        <Route path="/" element={<Layout signOut={signOut} user={worked}/>}>
           <Route index element={<Home />} />
           <Route path="houses" element={<Houses aws={aws} />} />
           <Route path="past" element={<Past aws={aws} />} />
@@ -118,7 +122,7 @@ function App({ signOut }) {
           <Route path="useredit" element={<Editor person={worked.user}/>}/>
           <Route path="*" element={<NoPage />} />
           <Route path="useracc" element = {<Acc/>}/>
-
+          <Route path="housepg" element = {<Housepg/>}/>
         </Route>
       </Routes>
     </BrowserRouter>

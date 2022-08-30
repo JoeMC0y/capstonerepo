@@ -36,6 +36,52 @@ exports.homeStuff = {
 
     },
 
+    getReqs: async function(){
+        const client = await MongoClient.connect(uri);
+
+        try{
+            const db = client.db(dbName);
+
+            const collection = db.collection(collection2Name);
+
+            var query = {};
+
+            var results = await collection.find(query).toArray();
+
+
+            return results;
+        }catch(e){
+            console.log("database Failed");
+            console.log(e);
+        }finally{
+            client.close();
+        }
+    },
+
+    getBuyers: async function(){
+        const client = await MongoClient.connect(uri);
+
+        try{
+            const db = client.db(dbName);
+
+            const collection = db.collection(collection3Name);
+
+            var query = {};
+
+            var results = await collection.find(query).toArray();
+
+
+            return results;
+        }catch(e){
+            console.log("database Failed");
+            console.log(e);
+        }finally{
+            client.close();
+        }
+    },
+
+
+
     createHouse: async function(strAd, city, state, zipcode,  pricing, sqrft, listing, userId){
         const client = await MongoClient.connect(uri);
 
@@ -89,7 +135,7 @@ exports.homeStuff = {
         }
     },
 
-    addReqs: async function(text, completed, houseid){
+    addReqs: async function(todos, houseid){
         const client = await MongoClient.connect(uri);
 
         try{
@@ -97,8 +143,7 @@ exports.homeStuff = {
             const collection = db.collection(collection2Name);
 
             var newReq = {
-                text: text,
-                comp: completed,
+                todos: todos,
                 houseid: houseid
             }
 
@@ -134,10 +179,44 @@ exports.homeStuff = {
     },
 
     deletebuyer: async function(id){
+        const client = await MongoClient.connect(uri);
 
+        try{
+            const db = client.db(dbName);
+            const collection = db.collection(collection3Name);
+
+            var query = { _id: new ObjectId(id) }
+            
+            var results = await collection.deleteOne(query);
+
+
+            return results;
+        }catch(e){
+            console.log("Database delete Failed");
+            console.log(e);
+        }finally{
+            client.close();
+        }
     },
     deleteReqs: async function(id){
+        const client = await MongoClient.connect(uri);
 
+        try{
+            const db = client.db(dbName);
+            const collection = db.collection(collection2Name);
+
+            var query = { _id: new ObjectId(id) }
+            
+            var results = await collection.deleteOne(query);
+
+
+            return results;
+        }catch(e){
+            console.log("Database delete Failed");
+            console.log(e);
+        }finally{
+            client.close();
+        }
     },
 
     updateHome: async function(id, listing){
@@ -175,6 +254,24 @@ exports.homeStuff = {
             const collection = db.collection(collectionName);
 
             var query = { user: id }
+            var results = await collection.find(query).toArray();
+            return results;
+        }catch(e){
+            console.log("database Failed");
+            console.log(e);
+        }finally{
+            client.close();
+        }
+    },
+
+    reqsByID: async function(id){
+        const client = await MongoClient.connect(uri);
+
+        try{
+            const db = client.db(dbName);
+            const collection = db.collection(collection2Name);
+
+            var query = { houseid: id }
             var results = await collection.find(query).toArray();
             return results;
         }catch(e){

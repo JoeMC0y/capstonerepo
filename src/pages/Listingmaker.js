@@ -30,9 +30,11 @@ function Listing({aws}) {
         if(addVal == '' || cityVal == '' ||stVal == '' ||zipVal == '' ||priceVal == '' ||sqrftVal == ''){
             setWorked({working: false, message: "Cant have any empty values", color: "Red"})
         }else{
+            
             var url = `http://localhost:4200/makeHome/${addVal}&${cityVal}&${stVal}&${zipVal}&${priceVal}&${sqrftVal}&${listing}&${email.email}`
-            const reps = await fetch(url).then(r => r.json(0))
             setWorked({working: false, message: "Listing created you may view it in listings", color: "Green"})
+            const reps = await fetch(url).then(r => r.json(0))
+            
             
         }
     }

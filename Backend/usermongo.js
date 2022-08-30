@@ -33,7 +33,7 @@ exports.userStuff = {
 
     },
 
-    createUser: async function(name, age, UserName, Email){
+    createUser: async function(name, age, UserName, Email, accmade){
         const client = await MongoClient.connect(uri);
 
         try{
@@ -44,7 +44,8 @@ exports.userStuff = {
                 name: name,
                 age: age,
                 Username: UserName,
-                Email: Email
+                Email: Email,
+                accmade: accmade
             }
 
             var results = await collection.insertOne(newUser);

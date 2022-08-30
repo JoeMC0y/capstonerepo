@@ -13,38 +13,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 
-const Layout = ({signOut, aws}) => {
-  const [users, setUsers] = useState([]);
-  const [user, setUser] = useState([]);
-  useEffect(() => {
-      getData()
-    }, []);
-
-    useEffect(() => {
-      checkUser()
-    }, [users]);
-    
-    const getData = () => {
-      var url = `http://localhost:4200/getAll`;
-      fetch(url)
-        .then(r => r.json(0))
-        .then(data => {
-          setUsers(data);
-          console.log(data)
-      }).catch(e => console.log(e));
-    }
-  
-
-    const checkUser = () =>{
-      var Email = aws.attributes
-
-      users.forEach(user => {
-        if(Email.email === user.Email){
-          setUser(user)
-        }
-      });
-    }
-
+const Layout = ({signOut, user}) => {
   return (
     <>
         <Navbar bg="light" expand="lg" variant="light">
