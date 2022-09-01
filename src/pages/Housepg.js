@@ -127,11 +127,14 @@ const Housepg = ({houses}) =>{
     window.location.reload()
   }
   
-
+  const wrapper = () => {
+    window.location.reload()
+  }
 
   return(
     <>
       <div className='housePage'>
+        <button onClick={()=>wrapper()}>Return</button>
         <div className='BigHouseBox'>
           <div className='textArea'>
             <div>
