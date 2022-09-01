@@ -12,7 +12,6 @@ const uri = "mongodb+srv://me:C3ll0world@users.33oiczg.mongodb.net/?retryWrites=
 
 exports.homeStuff = {
 
-
     getAll: async function(){
         const client = await MongoClient.connect(uri);
 
@@ -81,8 +80,7 @@ exports.homeStuff = {
     },
 
 
-
-    createHouse: async function(strAd, city, state, zipcode,  pricing, sqrft, listing, userId){
+    createHouse: async function(hName, strAd, city, state, zipcode,  pricing, sqrft, listing, userId){
         const client = await MongoClient.connect(uri);
 
         try{
@@ -90,6 +88,7 @@ exports.homeStuff = {
             const collection = db.collection(collectionName);
 
             var newHome = {
+                Hname: hName,
                 strAd: strAd,
                 city: city,
                 state: state,
@@ -110,7 +109,7 @@ exports.homeStuff = {
         }
     },
 
-    addBuyer : async function(name, phone, email, bidding, houseid){
+    addBuyer : async function(name, contact, houseid){
         const client = await MongoClient.connect(uri);
 
         try{
@@ -119,9 +118,7 @@ exports.homeStuff = {
 
             var newbuyer = {
                 name: name,
-                phone: phone,
-                email: email,
-                bidding: bidding,
+                contact: contact,
                 houseid: houseid
             }
 
@@ -135,7 +132,7 @@ exports.homeStuff = {
         }
     },
 
-    addReqs: async function(todos, houseid){
+    addReqs: async function(todo, done, houseid){
         const client = await MongoClient.connect(uri);
 
         try{
@@ -143,7 +140,8 @@ exports.homeStuff = {
             const collection = db.collection(collection2Name);
 
             var newReq = {
-                todos: todos,
+                todos: todo,
+                done: done,
                 houseid: houseid
             }
 
@@ -198,6 +196,7 @@ exports.homeStuff = {
             client.close();
         }
     },
+
     deleteReqs: async function(id){
         const client = await MongoClient.connect(uri);
 
@@ -246,6 +245,34 @@ exports.homeStuff = {
         }
     },
 
+    updateReq: async function(id, done){
+        const client = await MongoClient.connect(uri);
+
+        try{
+            const db = client.db(dbName);
+            const collection = db.collection(collection2Name);
+
+            var query = { _id: new ObjectId(id) }
+            var update = {
+                $set: {
+                    done: done
+                }
+            }
+
+            var results = await collection.updateOne(query, update);
+
+            console.log(results);
+
+            return results;
+        }catch(e){
+            console.log("Database Update failed");
+            console.log(e);
+        }finally{
+            client.close();
+        }
+    },
+
+
     homesByID: async function(id){
         const client = await MongoClient.connect(uri);
 
@@ -270,6 +297,24 @@ exports.homeStuff = {
         try{
             const db = client.db(dbName);
             const collection = db.collection(collection2Name);
+
+            var query = { houseid: id }
+            var results = await collection.find(query).toArray();
+            return results;
+        }catch(e){
+            console.log("database Failed");
+            console.log(e);
+        }finally{
+            client.close();
+        }
+    },
+
+    buyersByID: async function(id){
+        const client = await MongoClient.connect(uri);
+
+        try{
+            const db = client.db(dbName);
+            const collection = db.collection(collection3Name);
 
             var query = { houseid: id }
             var results = await collection.find(query).toArray();

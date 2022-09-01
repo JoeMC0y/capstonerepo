@@ -32,15 +32,21 @@ app.get("/homes/:user", async (req, res)=>{
     res.json(homes)
 })
 
-app.get("/reqs/:home", async (req, res)=>{
-    const reqs = await hmong.homeStuff.reqsByID(req.params.user)
-    
+app.get("/getReqs/:home", async (req, res)=>{
+    const reqs = await hmong.homeStuff.reqsByID(req.params.home)
+    console.log(req.params.home)
     console.log(reqs)
 
     res.json(reqs)
 })
 
+app.get("/getBuyers/:home", async (req, res)=>{
+    const reqs = await hmong.homeStuff.buyersByID(req.params.home)
+    console.log(req.params.home)
+    console.log(reqs)
 
+    res.json(reqs)
+})
 
 app.get("/updateUser/:id&:name&:age&:username", async (req, res)=>{
     await mong.userStuff.updateUser(req.params.id, req.params.name, req.params.age, req.params.username,)
@@ -65,9 +71,10 @@ app.get("/makeUser/:name&:age&:username&:email&:acc", async (req, res)=>{
 
 });
 
-app.get("/makeHome/:add&:city&:state&:zip&:price&:sqrft&:list&:user", async (req, res)=>{
-    hmong.homeStuff.createHouse(req.params.add, req.params.city, req.params.state, req.params.zip, req.params.price, req.params.sqrft, req.params.list, req.params.user)
+app.get("/makeHome/:name&:add&:city&:state&:zip&:price&:sqrft&:list&:user", async (req, res)=>{
+    hmong.homeStuff.createHouse(req.params.name, req.params.add, req.params.city, req.params.state, req.params.zip, req.params.price, req.params.sqrft, req.params.list, req.params.user)
     console.log("House made")
+    
 })
 
 app.get("/updateHomelist/:id&:list", async (req, res)=>{
@@ -76,10 +83,51 @@ app.get("/updateHomelist/:id&:list", async (req, res)=>{
 })
 
 
-app.get("/makeReq/:todo$:id", async (req, res) => {
-    hmong.homeStuff.addReqs(req.params.todo, req.params.id)
+app.get("/makeReq/:todo&:done&:id", async (req, res) => {
+    await hmong.homeStuff.addReqs(req.params.todo, req.params.done, req.params.id)
+    const reqs = await hmong.homeStuff.reqsByID(req.params.id)
     console.log("reqs made")
+    res.json(reqs)
+}) 
+
+app.get("/makeBuyer/:name&:contact&:id", async (req, res) => {
+    await hmong.homeStuff.addBuyer(req.params.name, req.params.contact, req.params.id)
+    const buyers = await hmong.homeStuff.buyersByID(req.params.id)
+    console.log("buyer made")
+    res.json(buyers)
+}) 
+
+app.get("/deleteReq/:id&:hid", async (req, res) => {
+    await hmong.homeStuff.deleteReqs(req.params.id)
+
+    const reqs = await hmong.homeStuff.reqsByID(req.params.hid)
+
+    res.json(reqs)
 })
+
+app.get("/deleteBuyer/:id&:hid", async (req, res) => {
+    await hmong.homeStuff.deletebuyer(req.params.id)
+
+    const reqs = await hmong.homeStuff.buyersByID(req.params.hid)
+
+    res.json(reqs)
+    console.log("deleted user")
+})
+
+app.get("/updateReqs/:id&:done&:hid", async (req, res) => {
+    console.log(req.params.id)
+    console.log(req.params.done)
+    console.log("updated")
+    await hmong.homeStuff.updateReq(req.params.id, req.params.done)
+
+    const reqs = await hmong.homeStuff.reqsByID(req.params.hid)
+
+    res.json(reqs)
+})
+
+// app.get("/updateReq/:todo&:id", async (req, res) => {
+//     hmong.homeStuff.
+// })
 
 function getResults(homes){
     if(homes && homes.length > 0){

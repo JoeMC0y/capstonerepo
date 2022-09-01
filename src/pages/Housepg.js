@@ -1,130 +1,210 @@
-import react, { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import React from 'react';
-import { Route } from 'react-router-dom';
 import "./cssFiles/Houses.css"
 const Housepg = ({houses}) =>{
+  const [todos, setTodos] = useState([]);
+  const [buyers, setBuyers] = useState([]);
+  const newtodo = useRef();
+  const newpers = useRef();
+  const perscont = useRef();
 
+  const [worked, setWorked] = useState({
+    working: "true",
+    message: '',
+    color: ''
+  });
 
-    const [todos, setTodos] = useState([
+  useEffect(() => {
+    getReqData();
+    getPersonData()
+  }, []);
+
+  const getReqData = () => {
+    var url = `http://localhost:4200/getReqs/${houses._id}`;
+    fetch(url)
+    .then(r => r.json(0))
+    .then(data => {
+      console.log("array")
+      setTodos(data)
+      console.log(data)
+    }).catch(e => console.log(e));
+    fetch(url)
+  }
+
+  const getPersonData = () => {
+    var url = `http://localhost:4200/getBuyers/${houses._id}`;
+    fetch(url)
+    .then(r => r.json(0))
+    .then(data => {
+      setBuyers(data)
+      console.log(data)
+    }).catch(e => console.log(e));
+    fetch(url)
+  }
+    
+  const createTodoAtIndex = async (e)  => {
+    e.preventDefault();
+    const newTodos = [...todos];
+    const text = newtodo.current.value;
+    newTodos.push(
+      {
+      todos: text,
+      done: "false",
+      }
+    )
+    newtodo.current.value = ''
+    const todo = text
+    const done = "false"
+    var url = `http://localhost:4200/makeReq/${todo}&${done}&${houses._id}`
+    const reps = await fetch(url).then(r => r.json(0))
+    setTodos(reps);
+  }
+
+  const createPersonAtIndex = async (e)  => {
+    e.preventDefault()
+    
+    const name = newpers.current.value;
+    const contact = perscont.current.value;
+    if(name === '' || contact === ''){
+      setWorked({working: "false", message: "Cant have any empty values", color: "Red"})
+    }else{
+      const newBuyers = [...buyers];
+      newBuyers.push(
         {
-          content: 'add to do items',
-          isCompleted: false,
+        name: name,
+        contact: contact
         }
-    ]);
-
-    useEffect(() => {
-        getReqData();
-    }, []);
-
-    const getReqData = () => {
-        var url = `http://localhost:4200/`;
-        fetch(url)
+      )        
+      newpers.current.value = ''
+      perscont.current.value = ''
+      setBuyers(newBuyers)
+      var url = `http://localhost:4200/makeBuyer/${name}&${contact}&${houses._id}`
+      const reps = await fetch(url).then(r => r.json(0))
+      setBuyers(reps);
     }
+  }
 
-    function handleKeyDown(e, i) {
-        if (e.key === 'Enter') {
-          createTodoAtIndex(e, i);
-        }
-        if (e.key === 'Backspace' && todos[i].content === '') {
-          e.preventDefault();
-          return removeTodoAtIndex(i);
-        }
-    }
+  const removeTodoAtIndex = async (i) => {
+    const temporaryTodos = [...todos];
+    var url = `http://localhost:4200/deleteReq/${temporaryTodos[i]._id}&${houses._id}`;
+    const reps = await fetch(url).then(r => r.json(0))
+    setTodos(reps);
+  }
+
+  const removePersonAtIndex = async (i) => {
+    const newBuyers = [...buyers];
+    var url = `http://localhost:4200/deleteBuyer/${newBuyers[i]._id}&${houses._id}`;
+    const reps = await fetch(url).then(r => r.json(0))
+    setBuyers(reps);
+  }
     
-    function createTodoAtIndex(e, i) {
-        
-        const newTodos = [...todos];
-        newTodos.splice(i + 1, 0, {
-          content: '',
-          isCompleted: false,
-        });
-        setTodos(newTodos);
-        var url = `http://localhost:4200/makeReq/${newTodos}&${houses._id}`
-        setTimeout(() => {
-          document.forms[0].elements[i + 1].focus();
-          var url = ``
-        }, 0);
+  const toggleTodoCompleteAtIndex = async (index) => {
+    const temporaryTodos = [...todos];
+    console.log(temporaryTodos[index].done)
+    if(temporaryTodos[index].done === "true"){
+      temporaryTodos[index].done = "false"
+    }else if(temporaryTodos[index].done === "false"){
+      temporaryTodos[index].done = "true"
     }
-    
-    function updateTodoAtIndex(e, i) {
-        const newTodos = [...todos];
-        newTodos[i].content = e.target.value;
-  
-        setTodos(newTodos);
-    }
-    
-    function removeTodoAtIndex(i) {
-        if (i === 0 && todos.length === 1) return;
-        setTodos(todos => todos.slice(0, i).concat(todos.slice(i + 1, todos.length)));
-        setTimeout(() => {
-          document.forms[0].elements[i - 1].focus();
-        }, 0);
-    }
-    
-    function toggleTodoCompleteAtIndex(index) {
-        const temporaryTodos = [...todos];
-        temporaryTodos[index].isCompleted = !temporaryTodos[index].isCompleted;
+    console.log(temporaryTodos[index].done)
+    var url = `http://localhost:4200/updateReqs/${temporaryTodos[index]._id}&${temporaryTodos[index].done}&${houses._id}`;
+    const reps = await fetch(url).then(r => r.json(0))
+    setTodos(reps);
 
-        setTodos(temporaryTodos);
-    }
+  }
 
-    const wrapperFunc = async () => {
-        var listing = "Sold"
-        var url = `http://localhost:4200/updateHomelist/${houses._id}&${listing}`;
+  const wrapperFunc = async (i) => {
+    for(let l = 0; l < buyers.length; l++){
+      console.log(l)
+      if(l != i){
+        var url = `http://localhost:4200/deleteBuyer/${buyers[l]._id}&${houses._id}`;
         const reps = await fetch(url).then(r => r.json(0))
-        
-    }
+      }
+    }    
+    var listing = "Sold"
+    var url = `http://localhost:4200/updateHomelist/${houses._id}&${listing}`;
+    const reps = fetch(url).then(r => r.json(0))  
+    window.location.reload()
+  }
   
 
 
-    return(
-        <>
-          <div className='housePage'>
-          <p></p>
-            <div className='BigHouseBox'>
-              <div className='textArea'>
-                    <div>
-                        <label>Address: </label>
-                        <br></br>
-                        {houses.strAd} {houses.city}, {houses.state} {houses.zipcode}
-                        <p></p>
-                        <label>Square Footage:</label>
-                        <br></br>
-                        {houses.sqrft} sqrft.
-                        <p></p>
-                        <label> Pricing: </label>
-                        <br></br>
-                        ${houses.pricing}
-                    </div>
-              </div>
-            <button className='backBtn' onClick={() => wrapperFunc()}>Sell</button>
+  return(
+    <>
+      <div className='housePage'>
+        <div className='BigHouseBox'>
+          <div className='textArea'>
+            <div>
+              <h1>{houses.Hname}</h1>
+
+              <label>Address: </label>
+              <br></br>
+              {houses.strAd} {houses.city}, {houses.state} {houses.zipcode}
+              <p></p>
+
+              <label>Square Footage:</label>
+              <br></br>
+              {houses.sqrft} sqrft.
+              <p></p>
+
+              <label> Pricing: </label>
+              <br></br>
+              ${houses.pricing}
             </div>
-            <div className='houseReqs'>
-              House checklist
-              </div>
-               <form className="todo-list">
-                 <ul>
-                   {todos.map((todo, i) => (
-                     <div className={`todo ${todo.isCompleted && 'todo-is-completed'}`}>
-                       <div className={'checkbox'} onClick={() => toggleTodoCompleteAtIndex(i)}>
-                         {todo.isCompleted && (
-                           <span>&#x2714;</span>
-                         )}
-                       </div>
-                       <input
-                         type="text"
-                         value={todo.content}
-                         onKeyDown={e => handleKeyDown(e, i)}
-                         onChange={e => updateTodoAtIndex(e, i)}
-                         className={'inputreq'}
-                       />
-                     </div>
-                   ))}
-                 </ul>
-               </form>
-             </div>
-          </>
-      )
+          </div>
+          <div className='houseReqs'>
+            <h2>House checklist</h2>
+            <div className="todo-list">
+              <ul className='todoUl'>
+                {todos.length > 0 && todos.map((todo, i) => (
+                  <div className="todont" >
+                      <div className={`todo ${todo.done === "true" && 'todo-is-completed'}`}>
+                        <div key={i+1} className='checkbox' onClick={() => toggleTodoCompleteAtIndex(i)}>
+                          {todo.done === "true" && (
+                            <span>&#x2714;</span>
+                          )}
+                        </div>
+                        <p className={'inputreq'}>{todo.todos}</p>
+                      </div>
+                      <button onClick={()=> removeTodoAtIndex(i)}>delete</button>
+                  </div>
+                ))}
+              </ul>
+              <form onSubmit={createTodoAtIndex}>
+                  <input type='text' ref={newtodo} placeholder={"Add todo items"}/>
+                  <button className='btn btn-secondary'>add</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div className='houseBuyers'>
+          <h2>Potential buyers</h2>
+          <div>
+            <div className='buyers'>
+              <ul>
+                {buyers.length > 0 && buyers.map((buyer, i) => (
+                  <div className="pers" >
+                    <h4 className={'inputpers'}>{buyer.name}</h4>
+                    <br></br>
+                    <h5 className={'inputpers'}>{buyer.contact}</h5>
+                    <br></br>
+                    <button onClick={()=> removePersonAtIndex(i)}>delete</button>
+                    <button onClick={() => wrapperFunc(i)}>Sell</button>
+                  </div>
+                ))}
+              </ul>
+            </div>
+            <form onSubmit={createPersonAtIndex}>
+              <input type='text' ref={newpers} placeholder={"Buyer name"}/>
+              <input type='text' ref={perscont} placeholder={"Buyer contact"}/>
+              <button className='btn btn-secondary'>add</button>
+              {worked.working === "false" && <p style={{color: worked.color}}>{worked.message}</p>}
+            </form>
+          </div>
+        </div>  
+      </div>
+    </>
+  )
 }
 
 export default Housepg 
