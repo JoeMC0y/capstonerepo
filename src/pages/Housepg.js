@@ -131,10 +131,19 @@ const Housepg = ({houses}) =>{
     window.location.reload()
   }
 
+  const deleteHome = async () => {
+    console.log(houses._id)
+    var url = `http://localhost:4200/deleteHouse/${houses._id}`;
+    const reps = await fetch(url).then(r => r.json(0))
+    console.log(reps)
+    window.location.reload()
+  }
+
   return(
     <>
       <div className='housePage'>
         <button onClick={()=>wrapper()}>Return</button>
+        <button onClick={()=>deleteHome()}>Delete</button>
         <div className='BigHouseBox'>
           <div className='textArea'>
             <div>

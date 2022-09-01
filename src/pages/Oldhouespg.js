@@ -63,7 +63,7 @@ const OldHousepg = ({houses}) =>{
             </div>
           </div>
           <div className='houseReqs'>
-            <h2>House checklist</h2>
+            <h2>Previous checklist</h2>
             <div className="todo-list">
               <ul className='todoUl'>
                 {todos.length > 0 && todos.map((todo, i) => (

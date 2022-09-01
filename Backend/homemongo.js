@@ -166,7 +166,6 @@ exports.homeStuff = {
             
             var results = await collection.deleteOne(query);
 
-
             return results;
         }catch(e){
             console.log("Database delete Failed");

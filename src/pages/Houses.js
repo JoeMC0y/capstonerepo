@@ -38,7 +38,7 @@ const Houses = ({aws}) => {
     return(
       <div className='homes'>
         <h2>Your Listed Homes:</h2>
-        {
+        {houses.length > 0 ?
           houses.map((houses, index) => (
             <div key={index + 1} className='homeBox' onClick={() => setPage({PageType: 'SingleHouse', House: houses})}>
               <br></br>
@@ -61,6 +61,8 @@ const Houses = ({aws}) => {
               </div>
             </div>
           ))
+          :
+          <h3>You currently have no listed homes</h3>
         }
       </div>
     )

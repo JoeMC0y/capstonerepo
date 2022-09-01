@@ -123,6 +123,7 @@ function App({ signOut }) {
     return(
       <>
         <div>
+          <h1>Please give us some extra information about you</h1>
             <form onSubmit={makeData}>
               <input ref={username} className="formText" type="text" placeholder="Username" />
               <input ref={age} className="formText" type="number" min={18} placeholder="Age"/>

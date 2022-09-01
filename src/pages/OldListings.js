@@ -35,13 +35,13 @@ const Pastlist = ({aws}) => {
     return(
       <div className='homes'>
         <h2>Your Old or Sold Homes:</h2>
-          {
+          { houses.length >0 ?
             houses.map((houses, index) => (
               <div key={index + 1} className='homeBox' onClick={() => setPage({PageType: 'SingleHouse', House: houses})}>
                 <br></br>
                 <div className='textBox'>
                   <h3>{houses.Hname}</h3>
-                  
+
                     <label>Zip: </label>
                     {houses.zipcode}
                     <br></br>
@@ -52,6 +52,8 @@ const Pastlist = ({aws}) => {
                 </div>
               </div>
             ))
+            :
+            <h3>You currently have no previous listings</h3>
           }
       </div>
     )

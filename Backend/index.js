@@ -97,6 +97,12 @@ app.get("/makeBuyer/:name&:contact&:id", async (req, res) => {
     res.json(buyers)
 }) 
 
+app.get("/deleteHouse/:ids", async (req, res) => {
+    await hmong.homeStuff.deleteHouse(req.params.ids)
+    res.json("deleted")
+    console.log("deleted home")
+})
+
 app.get("/deleteReq/:id&:hid", async (req, res) => {
     await hmong.homeStuff.deleteReqs(req.params.id)
 
